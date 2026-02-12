@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { slideTo } from "./utils/slide";
 import { getCurrentTheme, setDefaultTheme, toggleDarkTheme, type Theme } from "./utils/theme";
+import { useOnScrollAt } from "./utils/scroll-detection";
 
 function generateLotofLoremIpsums(repeat: number) {
   let output = "";
@@ -34,6 +35,16 @@ export default function App() {
     setThemeLabel(getCurrentTheme());
   }
   // ------------------------------------------------------------------------------
+  
+  // ------------------------------------------------------------------------------
+  // SCROLL DETECTION UTILITY
+  const [loremIpsumClassName, setLoremIpsumClassName] = useState<string>("");
+  useOnScrollAt(
+    SLIDE_ID, // If user is at this part
+    () => setLoremIpsumClassName("bg-neutral-900 text-white"),
+    () => setLoremIpsumClassName("bg-neutral-50 text-black")
+  );
+  // ------------------------------------------------------------------------------
 
   return (
     <>
@@ -60,10 +71,14 @@ export default function App() {
             Theme: {themeLabel}
           </button>
 
+          <br/><br/>
+          {/* Detect scroll (ID) */}
+          <h2>Try to scroll downard</h2>
+
         </div>
       </div>
 
-      <div id={SLIDE_ID} className="max-w-7xl mx-auto py-8 bg-neutral-600 text-white">
+      <div id={SLIDE_ID} className={`max-w-7xl mx-auto py-8 transition duration-300 ${loremIpsumClassName}`}>
         {generateLotofLoremIpsums(100)}
       </div>
     </>
